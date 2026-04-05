@@ -161,43 +161,45 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
         <div className="space-y-8">
-          <AnimatePresence mode="wait">
-            <motion.div 
-              key={activeImage}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="aspect-square bg-text-primary/5 flex items-center justify-center relative overflow-hidden border border-text-primary/5"
-            >
-              <Image 
-                src={activeImage} 
-                alt={product.title} 
-                fill 
-                priority 
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain p-12" 
-              />
-            </motion.div>
-          </AnimatePresence>
+          <div className="aspect-square bg-text-primary/5 relative overflow-hidden border border-text-primary/5">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={activeImage}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={activeImage}
+                  alt={product.title}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover" 
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
           <div className="grid grid-cols-4 gap-4">
             {product.images.map((img, i) => (
-              <div 
-                key={i} 
-                onClick={() => setActiveImage(img)} 
+              <div
+                key={i}
+                onClick={() => setActiveImage(img)}
                 className={`aspect-square bg-text-primary/5 cursor-pointer relative border transition-all overflow-hidden ${
-                  activeImage === img ? "border-text-primary" : "border-text-primary/5"
+                  activeImage === img ? "border-text-primary scale-[0.98]" : "border-text-primary/5 hover:border-text-primary/40"
                 }`}
               >
-                <Image 
-                  src={img} 
-                  alt="Gallery" 
-                  fill 
-                  sizes="200px" 
-                  className={`object-cover transition-opacity duration-500 ${
-                    activeImage === img ? "opacity-100" : "opacity-40 hover:opacity-100"
-                  }`} 
+                <Image
+                  src={img}
+                  alt="Gallery thumbnail"
+                  fill
+                  sizes="200px"
+                  className={`object-cover transition-all duration-500 ${
+                    activeImage === img ? "opacity-100 scale-110" : "opacity-40 hover:opacity-100"
+                  }`}
                 />
               </div>
             ))}
