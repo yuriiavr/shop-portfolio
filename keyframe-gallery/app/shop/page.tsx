@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PRODUCTS } from "../lib/products";
 import ProductCard from "../components/ProductCard";
@@ -9,7 +9,7 @@ import { SlidersHorizontal } from "lucide-react";
 
 const CATEGORIES = ["Усі", "Клавіатури", "Перемикачі", "Кейкапи", "Аксесуари"];
 
-export default function ShopPage() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
 
@@ -123,5 +123,13 @@ export default function ShopPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-primary" />}>
+      <ShopContent />
+    </Suspense>
   );
 }
