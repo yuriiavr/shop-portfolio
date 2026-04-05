@@ -97,6 +97,7 @@ export default function CheckoutPage() {
                   >
                     <img 
                       src={item.image} 
+                      sizes="100px"
                       alt={item.title} 
                       className="w-full h-full object-contain p-2" 
                     />

@@ -172,7 +172,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           <div className="grid grid-cols-4 gap-4">
             {product.images.map((img, i) => (
               <div key={i} onClick={() => setActiveImage(img)} className={`aspect-square bg-text-primary/5 cursor-pointer relative border transition-all ${activeImage === img ? "border-text-primary" : "border-text-primary/5"}`}>
-                <Image src={img} alt="Gallery" fill className="object-cover opacity-60 hover:opacity-100" />
+                <Image src={img} alt="Gallery" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover opacity-60 hover:opacity-100" />
               </div>
             ))}
           </div>

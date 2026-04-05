@@ -67,6 +67,7 @@ export default function CartPage() {
                     src={item.image} 
                     alt={item.title} 
                     fill 
+                    sizes="100px"
                     className="object-contain p-4 group-hover:scale-110 transition-transform duration-700" 
                   />
                 </div>
