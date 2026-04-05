@@ -5,13 +5,21 @@ import Link from "next/link";
 import { useCart } from "../store/useCart";
 import { Trash2, Plus, Minus, ArrowLeft, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity } = useCart();
+  const { items, clearItem, updateQuantity } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const shipping = 25; 
+  const shipping = 90;
   const total = subtotal + shipping;
+
+  if (!mounted) return null;
 
   if (items.length === 0) {
     return (
@@ -21,7 +29,7 @@ export default function CartPage() {
           <p className="text-[10px] uppercase tracking-[0.3em] opacity-40 font-bold italic">Відкриття чекають на вас у колекції</p>
         </div>
         <Link 
-          href="/" 
+          href="/shop" 
           className="px-12 py-5 border border-text-primary text-text-primary uppercase tracking-[0.4em] text-[10px] font-bold hover:bg-text-primary hover:text-bg-primary transition-all duration-500"
         >
           Повернутися до колекції
@@ -36,7 +44,7 @@ export default function CartPage() {
         <h1 className="text-5xl font-light tracking-tighter uppercase text-text-primary italic">
           Ваш <span className="not-italic font-bold">Вибір</span>
         </h1>
-        <Link href="/" className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-opacity">
+        <Link href="/shop" className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] opacity-40 hover:opacity-100 transition-opacity">
           <ArrowLeft size={14} />
           Назад до перегляду
         </Link>
@@ -47,7 +55,7 @@ export default function CartPage() {
           <AnimatePresence mode="popLayout">
             {items.map((item) => (
               <motion.div
-                key={item.id}
+                key={`${item.id}-${item.title}`}
                 layout
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -65,30 +73,28 @@ export default function CartPage() {
 
                 <div className="flex-1 space-y-4 text-center sm:text-left">
                   <div className="space-y-1">
-                    <h3 className="text-xl font-bold tracking-tight text-text-primary uppercase">{item.title}</h3>
+                    <h3 className="text-xl font-bold tracking-tight text-text-primary uppercase leading-tight">{item.title}</h3>
                     <p className="text-[10px] uppercase tracking-widest opacity-40 italic">Серійний ID: {item.id}00254</p>
                   </div>
                   
                   <div className="flex items-center justify-center sm:justify-start gap-6">
                     <div className="flex items-center border border-text-primary/10">
                       <button 
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.id, item.title, Math.max(1, item.quantity - 1))}
                         className="p-2 hover:bg-text-primary/5 transition-colors opacity-40 hover:opacity-100"
                       >
-                        <span className="sr-only">Зменшити</span>
                         <Minus size={14} />
                       </button>
                       <span className="w-10 text-center text-xs font-bold">{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, item.title, item.quantity + 1)}
                         className="p-2 hover:bg-text-primary/5 transition-colors opacity-40 hover:opacity-100"
                       >
-                        <span className="sr-only">Збільшити</span>
                         <Plus size={14} />
                       </button>
                     </div>
                     <button 
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => clearItem(item.id, item.title)}
                       className="text-text-primary/30 hover:text-red-500 transition-colors"
                     >
                       <Trash2 size={16} strokeWidth={1.5} />
@@ -97,7 +103,7 @@ export default function CartPage() {
                 </div>
 
                 <div className="text-right">
-                  <p className="text-xl font-light text-text-primary">{(item.price * item.quantity).toFixed(2)} грн</p>
+                  <p className="text-xl font-light text-text-primary">{(item.price * item.quantity).toLocaleString()} грн</p>
                 </div>
               </motion.div>
             ))}
@@ -110,23 +116,26 @@ export default function CartPage() {
           <div className="space-y-4">
             <div className="flex justify-between text-sm">
               <span className="opacity-40 uppercase tracking-widest text-[10px]">Вартість товарів</span>
-              <span className="font-light italic">${subtotal.toFixed(2)}</span>
+              <span className="font-light italic">{subtotal.toLocaleString()} грн</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="opacity-40 uppercase tracking-widest text-[10px]">Доставка</span>
-              <span className="font-light italic">${shipping.toFixed(2)}</span>
+              <span className="font-light italic">{shipping.toLocaleString()} грн</span>
             </div>
             <div className="pt-4 border-t border-text-primary/10 flex justify-between">
               <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Загальна сума</span>
-              <span className="text-2xl font-bold">${total.toFixed(2)}</span>
+              <span className="text-2xl font-bold">{total.toLocaleString()} грн</span>
             </div>
           </div>
 
           <div className="space-y-4">
-            <button className="w-full py-6 bg-text-primary text-bg-primary uppercase tracking-[0.5em] text-[10px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-4">
+            <Link 
+              href="/checkout"
+              className="w-full py-6 bg-text-primary text-bg-primary uppercase tracking-[0.5em] text-[10px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-4"
+            >
               <CreditCard size={14} />
-              Перейти до оплати
-            </button>
+              Перейти до оформлення
+            </Link>
             <p className="text-[8px] uppercase tracking-[0.3em] opacity-20 text-center leading-relaxed">
               Податки та митні збори розраховуються<br/>на фінальному етапі логістики.
             </p>
