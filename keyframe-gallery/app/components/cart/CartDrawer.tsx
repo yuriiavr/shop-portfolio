@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { items, addItem, removeItem, clearItem, totalPrice } = useCart();
+  const { items, addItem, removeItem, clearItem, getTotalPrice } = useCart();
 
   const router = useRouter();
   const handleCheckout = () => {
@@ -60,7 +60,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
                       <h4 className="text-sm font-medium">{item.title}</h4>
                       <p className="text-xs opacity-50">{item.price} грн</p>
                       <div className="flex items-center gap-3 mt-2">
-                        <button onClick={() => removeItem(item.id)} className="opacity-40 hover:opacity-100 p-1">
+                        <button onClick={() => removeItem(item.id, item.title)} className="opacity-40 hover:opacity-100 p-1">
                           <Minus size={14} />
                         </button>
                         <span className="text-xs w-4 text-center">{item.quantity}</span>
@@ -70,7 +70,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
                       </div>
                     </div>
                     <button 
-                      onClick={() => clearItem(item.id)} 
+                      onClick={() => clearItem(item.id, item.title)} 
                       className="text-red-500/50 hover:text-red-500 transition-colors p-2"
                     >
                       <Trash2 size={16} />
@@ -84,7 +84,7 @@ export default function CartDrawer({ isOpen, onClose }: { isOpen: boolean; onClo
               <div className="p-6 border-t border-text-primary/5 space-y-4">
                 <div className="flex justify-between items-end">
                   <span className="text-xs uppercase opacity-40">Загальна вартість</span>
-                  <span className="text-xl font-light">{totalPrice()} грн</span>
+                  <span className="text-xl font-light">{getTotalPrice()} грн</span>
                 </div>
                 <button onClick={handleCheckout} className="w-full py-4 bg-text-primary text-bg-primary uppercase tracking-[0.3em] text-[10px] font-bold hover:opacity-90 transition-all">
                   Оформити замовлення
