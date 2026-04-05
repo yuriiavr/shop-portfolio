@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #1a1a1d;
+  --color-light-grey: #d1d5db;
+  
+  /* Додамо нові змінні для зручності */
+  --color-bg-primary: var(--color-charcoal);
+  --color-text-primary: var(--color-light-grey);
+  --text-icon-hover-primary: var(--color-charcoal);
+}
+
+/* Спеціальний блок для світлої теми */
+@variant light (&:where(.light, .light *));
+
+.light {
+  --color-bg-primary: #f4f1ea;
+  --color-text-primary: #1a1a1d;
+  --color-charcoal: #f4f1ea; 
+  --color-light-grey: #4a4a4a;
+  --text-icon-hover-primary: #0000ff;
+}
+
+@layer base {
+  body {
+    /* Використовуємо змінні, які будуть змінюватися */
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    @apply transition-colors duration-500 antialiased;
+  }
+}
+
+button{
+  cursor: pointer;
+}
