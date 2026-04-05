@@ -85,19 +85,37 @@ export default function CheckoutPage() {
         <div className="lg:sticky lg:top-32 h-fit space-y-12 bg-text-primary/[0.02] border border-text-primary/5 p-12">
           <h2 className="text-[10px] uppercase tracking-[0.4em] font-bold opacity-40">Огляд замовлення</h2>
           
-          <div className="space-y-8">
-            {items.map((item) => (
-              <div key={item.id} className="flex justify-between items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-12 h-12 bg-text-primary/5 border border-text-primary/5">
-                    <img src={item.image} alt={item.title} className="object-contain p-2" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-primary">{item.title}</p>
-                    <p className="text-[9px] opacity-40 uppercase tracking-tighter">К-сть: {item.quantity}</p>
+          <div className="space-y-10">
+            {items.map((item, index) => (
+              <div key={`${item.id}-${item.title}`} className="flex items-start justify-between gap-6">
+                <div className="flex items-start gap-6 flex-1">
+                  <motion.div 
+                    initial={index === 0 ? { scale: 0.8, opacity: 0 } : {}}
+                    animate={index === 0 ? { scale: 1, opacity: 1 } : {}}
+                    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative w-24 h-24 bg-text-primary/5 border border-text-primary/5 flex-shrink-0 overflow-hidden"
+                  >
+                    <img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="w-full h-full object-contain p-2" 
+                    />
+                  </motion.div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-text-primary leading-tight">
+                      {item.title}
+                    </p>
+                    <p className="text-[9px] opacity-40 uppercase tracking-tighter">
+                      Кількість: {item.quantity}
+                    </p>
+                    <p className="text-[10px] font-light pt-2">
+                      {item.price.toLocaleString()} грн
+                    </p>
                   </div>
                 </div>
-                <p className="text-sm font-light">{(item.price * item.quantity).toFixed(2)} грн</p>
+                <p className="text-sm font-light whitespace-nowrap">
+                  {(item.price * item.quantity).toLocaleString()} грн
+                </p>
               </div>
             ))}
           </div>
@@ -105,15 +123,15 @@ export default function CheckoutPage() {
           <div className="space-y-4 pt-8 border-t border-text-primary/10">
             <div className="flex justify-between text-[10px] uppercase tracking-widest opacity-40">
               <span>Вартість товарів</span>
-              <span>{subtotal.toFixed(2)} грн</span>
+              <span>{subtotal.toLocaleString()} грн</span>
             </div>
             <div className="flex justify-between text-[10px] uppercase tracking-widest opacity-40">
               <span>Доставка</span>
-              <span>{shipping.toFixed(2)} грн</span>
+              <span>{shipping.toLocaleString()} грн</span>
             </div>
             <div className="flex justify-between pt-4 text-xl font-bold text-text-primary">
               <span className="text-[10px] uppercase tracking-[0.4em]">Разом до сплати</span>
-              <span>{total.toFixed(2)} грн</span>
+              <span>{total.toLocaleString()} грн</span>
             </div>
           </div>
         </div>
