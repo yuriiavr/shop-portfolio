@@ -6,8 +6,8 @@ import { ArrowLeft, Lock, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function CheckoutPage() {
-  const { items, totalPrice } = useCart();
-  const subtotal = totalPrice();
+  const { items, getTotalPrice } = useCart();
+  const subtotal = getTotalPrice();
   const shipping = 90;
   const total = subtotal + shipping;
 
